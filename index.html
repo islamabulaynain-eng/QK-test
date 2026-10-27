@@ -64,15 +64,6 @@
       background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
 
-    /* Hide scrollbar for chips container */
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
     /* Word Tokens */
     .word-token {
       display: inline-block;
@@ -145,7 +136,7 @@
     }
   </style>
 </head>
-<body class="font-cairo text-ink-main pb-32">
+<body class="font-cairo text-ink-main pb-40">
 
   <div class="max-w-4xl mx-auto px-4 pt-8">
     
@@ -166,7 +157,8 @@
         <h2 class="font-bold text-gold-700">تصفية الأحكام التجويدية</h2>
       </div>
       
-      <div class="flex overflow-x-auto hide-scrollbar gap-2 pb-2 px-2" id="filtersContainer">
+      <!-- Changed from overflow-x-auto to flex-wrap to solve mobile view -->
+      <div class="flex flex-wrap gap-2 pb-2 px-2" id="filtersContainer">
         <!-- Chips inserted via JS -->
       </div>
 
@@ -180,16 +172,8 @@
 
     <!-- Quran Mushaf Card -->
     <main class="bg-surface rounded-2xl shadow-xl shadow-gold-100/50 border border-gold-100 p-6 md:p-12 mb-8 animate-slide-up relative" style="animation-delay: 0.2s;">
-      <!-- Decorative borders -->
       <div class="absolute inset-2 border border-gold-300/30 rounded-xl pointer-events-none"></div>
       
-      <!-- Bismillah -->
-      <div class="text-center mb-8">
-        <div class="inline-block px-8 py-2 border-y border-gold-300/50 text-gold-700 font-quran text-2xl md:text-3xl">
-          بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ
-        </div>
-      </div>
-
       <!-- Quran Text -->
       <div id="quranContainer" class="text-center leading-[3.5] font-quran text-3xl md:text-4xl lg:text-[44px] text-ink-main select-none">
         <!-- Words inserted via JS -->
@@ -198,26 +182,26 @@
 
   </div>
 
-  <!-- Bottom Sheet / Modal for Word Details -->
-  <div id="detailsModal" class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-ink-main/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-    <div class="bg-surface w-full md:w-[450px] rounded-t-2xl md:rounded-2xl shadow-2xl p-6 transform translate-y-full md:translate-y-10 transition-transform duration-300" id="detailsCard">
+  <!-- Floating Details Card - Non Blocking -->
+  <div id="detailsModal" class="fixed bottom-20 md:bottom-24 left-4 right-4 md:left-auto md:right-8 z-50 hidden opacity-0 transition-opacity duration-300 pointer-events-none md:w-[400px]">
+    <div class="bg-surface w-full rounded-2xl shadow-2xl p-5 border border-gold-200 transform translate-y-4 transition-transform duration-300 pointer-events-auto" id="detailsCard">
       
-      <div class="flex justify-between items-center mb-6 pb-4 border-b border-gold-100">
+      <div class="flex justify-between items-center mb-4 pb-3 border-b border-gold-100">
         <div>
           <span id="modalTag" class="text-xs font-bold px-3 py-1 bg-gold-100 text-gold-700 rounded-full mb-2 inline-block"></span>
-          <h2 id="modalWordText" class="font-quran text-4xl text-gold-700"></h2>
+          <h2 id="modalWordText" class="font-quran text-3xl text-gold-700"></h2>
         </div>
         <button onclick="closeDetails()" class="p-2 bg-gray-50 text-gray-500 rounded-full hover:bg-gray-100 transition">
           <i class="ph ph-x text-xl"></i>
         </button>
       </div>
       
-      <div id="modalRulesList" class="max-h-[40vh] overflow-y-auto pr-2 custom-scroll mb-6 space-y-3">
+      <div id="modalRulesList" class="max-h-[30vh] overflow-y-auto pr-2 custom-scroll mb-4 space-y-3">
         <!-- Rules injected here -->
       </div>
 
       <!-- Play Word Button -->
-      <button id="playWordBtn" class="w-full py-3 bg-gradient-to-l from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-gold-500/30 transition-all transform hover:-translate-y-0.5">
+      <button id="playWordBtn" class="w-full py-2.5 bg-gradient-to-l from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-gold-500/30 transition-all transform hover:-translate-y-0.5">
         <i class="ph-fill ph-play-circle text-xl"></i>
         <span>استمع لهذه الكلمة</span>
       </button>
@@ -225,7 +209,7 @@
   </div>
 
   <!-- Fixed Bottom Audio Player -->
-  <div class="fixed bottom-0 left-0 right-0 bg-surface/80 backdrop-blur-md border-t border-gold-300/30 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-40 px-4 py-3 pb-safe">
+  <div class="fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-md border-t border-gold-300/30 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-40 px-4 py-3 pb-safe">
     <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-4">
       
       <!-- Controls -->
@@ -252,7 +236,7 @@
         <div class="relative flex-grow flex items-center h-5">
           <input type="range" id="audioProgress" value="0" min="0" max="100" step="0.1" class="w-full z-10 relative">
           <div id="progressFill" class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1.5 bg-gray-200 rounded-full overflow-hidden pointer-events-none">
-             <div id="progressActive" class="h-full bg-gold-500 w-0 absolute right-0"></div> <!-- right-0 for RTL -->
+             <div id="progressActive" class="h-full bg-gold-500 w-0 absolute right-0"></div>
           </div>
         </div>
         <span id="totalTimeDisplay" class="text-xs font-bold text-ink-muted w-10 text-center">00:00</span>
@@ -278,13 +262,23 @@
       idhar_halqi: { title: "الإظهار الحلقي", desc: "إخراج النون الساكنة من مخرجها بغير غنة زائدة عند ملاقاة أحد حروف الحلق: (الهمزة، الهاء، العين، الحاء، الغين، الخاء)." }
     };
 
+    // Configuration with Isti'adha check and Time Offsets
+    // timingOffset determines how many seconds we shift the audio to align with Bismillah starting at 0.1
     const RECITERS_CONFIG = {
-      afasy: { url: "https://server8.mp3quran.net/afs/001.mp3", timingOffset: 0 },
-      husary: { url: "https://server13.mp3quran.net/husr/001.mp3", timingOffset: 1.2 },
-      abdulbasit: { url: "https://server7.mp3quran.net/basit/001.mp3", timingOffset: 0.5 }
+      afasy: { url: "https://server8.mp3quran.net/afs/001.mp3", timingOffset: 7.5, hasIstiada: true },
+      husary: { url: "https://server13.mp3quran.net/husr/001.mp3", timingOffset: 1.2, hasIstiada: false },
+      abdulbasit: { url: "https://server7.mp3quran.net/basit/001.mp3", timingOffset: 6.0, hasIstiada: true }
     };
 
     const quranData = [
+      // كلمات الاستعاذة تمت إضافتها بتوقيتات سالبة لتتوافق مع الـ Offset
+      { id: 'ist_1', isIstiada: true, ayah: 0, text: "أَعُوذُ", start: -6.5, end: -5.5, rules: [] },
+      { id: 'ist_2', isIstiada: true, ayah: 0, text: "بِٱللَّهِ", start: -5.5, end: -4.5, rules: [{ name: "ترقيق لام الجلالة", cat: "tarqeeq", text: "ترقيق اللام لسبقها بكسر." }] },
+      { id: 'ist_3', isIstiada: true, ayah: 0, text: "مِنَ", start: -4.5, end: -3.5, rules: [] },
+      { id: 'ist_4', isIstiada: true, ayah: 0, text: "ٱلشَّيۡطَٰنِ", start: -3.5, end: -2.0, rules: [{ name: "لام شمسية", cat: "lam_shamsiya", text: "إدغام لام التعريف في الشين." }] },
+      { id: 'ist_5', isIstiada: true, ayah: 0, text: "ٱلرَّجِيمِ", start: -2.0, end: -0.1, rules: [{ name: "لام شمسية", cat: "lam_shamsiya", text: "إدغام لام التعريف في الراء." }, { name: "مد عارض للسكون", cat: "madd_ared", text: "مد عارض للسكون عند الوقف." }] },
+      
+      // سورة الفاتحة تبدأ من البسملة
       { id: 1, ayah: 1, text: "بِسۡمِ", start: 0.1, end: 0.8, rules: [{ name: "همس", cat: "hamas", text: "همس حرف السين الساكنة لجريان النَّفَس." }, { name: "ترقيق", cat: "tarqeeq", text: "ترقيق الباء والسين والميم." }] },
       { id: 2, ayah: 1, text: "ٱللَّهِ", start: 0.8, end: 1.8, rules: [{ name: "ترقيق لام الجلالة", cat: "tarqeeq", text: "ترقيق اللام في لفظ الجلالة لمجيء كسر قبلها." }] },
       { id: 3, ayah: 1, text: "ٱلرَّحۡمَٰنِ", start: 1.8, end: 3.2, rules: [{ name: "لام شمسية", cat: "lam_shamsiya", text: "إدغام لام التعريف في الراء." }, { name: "تفخيم الراء", cat: "tafkheem", text: "تفخيم الراء المفتوحة." }, { name: "همس", cat: "hamas", text: "همس الحاء الساكنة." }, { name: "مد طبيعي", cat: "madd_tabiee", text: "مد الألف الخنجرية حركتين." }] },
@@ -303,7 +297,7 @@
       { id: 13, ayah: 4, text: "ٱلدِّينِ", start: 20.9, end: 23.9, rules: [{ name: "لام شمسية", cat: "lam_shamsiya", text: "إدغام لام التعريف في الدال." }, { name: "مد عارض للسكون", cat: "madd_ared", text: "مد عارض للسكون عند الوقف." }] },
       { isAyahEnd: true, num: 4 },
       { id: 14, ayah: 5, text: "إِيَّاكَ", start: 24.3, end: 25.8, rules: [{ name: "مد طبيعي", cat: "madd_tabiee", text: "مد الألف حركتين." }] },
-      { id: 15, ayah: 5, text: "نَعۡبُدُ", start: 25.8, end: 27.2, rules: [{ name: "توسط العين", cat: "tarqeeq", text: "بيان توسط جريان صوت العين الساكنة." }] },
+      { id: 15, ayah: 5, text: "نَعۡبُدُ", start: 25.8, end: 27.2, rules: [{ name: "توسط العين", cat: "tarqeeq", text: "بيان متوسط جريان صوت العين الساكنة." }] },
       { id: 16, ayah: 5, text: "وَإِيَّاكَ", start: 27.2, end: 28.7, rules: [{ name: "مد طبيعي", cat: "madd_tabiee", text: "مد الألف حركتين." }] },
       { id: 17, ayah: 5, text: "نَسۡتَعِينُ", start: 28.7, end: 32.7, rules: [{ name: "همس", cat: "hamas", text: "همس السين الساكنة." }, { name: "مد عارض للسكون", cat: "madd_ared", text: "مد عارض للسكون عند الوقف." }] },
       { isAyahEnd: true, num: 5 },
@@ -336,6 +330,7 @@
     const reciterSelect = document.getElementById('reciterSelect');
 
     let currentReciter = 'afasy';
+    let currentFilter = 'all';
     let activeWordId = null;
     let isDragging = false;
     let animationFrameId = null;
@@ -349,7 +344,13 @@
 
     // --- Render Quran Text ---
     function renderQuran() {
+      quranContainer.innerHTML = '';
+      const reciterConfig = RECITERS_CONFIG[currentReciter];
+
       quranData.forEach(item => {
+        // إخفاء الاستعاذة إذا كان القارئ لا يقرأها
+        if (item.isIstiada && !reciterConfig.hasIstiada) return;
+
         if (item.isAyahEnd) {
           const marker = document.createElement('span');
           marker.className = 'inline-flex items-center justify-center w-10 h-10 mx-2 text-gold-600 font-quran text-2xl align-middle';
@@ -371,20 +372,21 @@
 
     // --- Render Chips Filters ---
     function renderFilters() {
-      // Add "All" chip
-      filtersContainer.innerHTML = `<button onclick="applyFilter('all', this)" class="filter-chip bg-gold-600 text-white px-4 py-1.5 rounded-full text-sm font-bold flex-shrink-0 transition-all shadow-md shadow-gold-500/20">الكل</button>`;
+      filtersContainer.innerHTML = `<button data-cat="all" onclick="applyFilter('all', this)" class="filter-chip bg-gold-600 text-white px-4 py-1.5 rounded-full text-sm font-bold flex-shrink-0 transition-all shadow-md shadow-gold-500/20">الكل</button>`;
       
       Object.keys(RULE_INFO).forEach(key => {
-        const title = RULE_INFO[key].title.split(' (')[0]; // Shorten title
+        const title = RULE_INFO[key].title.split(' (')[0];
         const btn = document.createElement('button');
         btn.className = 'filter-chip bg-surface border border-gold-200 text-ink-muted hover:bg-gold-50 hover:border-gold-300 px-4 py-1.5 rounded-full text-sm font-semibold flex-shrink-0 transition-all';
         btn.textContent = title;
+        btn.dataset.cat = key;
         btn.onclick = () => applyFilter(key, btn);
         filtersContainer.appendChild(btn);
       });
     }
 
     function applyFilter(category, btnElement) {
+      currentFilter = category;
       document.querySelectorAll('.filter-chip').forEach(b => {
         b.classList.remove('bg-gold-600', 'text-white', 'shadow-md', 'shadow-gold-500/20');
         b.classList.add('bg-surface', 'border-gold-200', 'text-ink-muted');
@@ -426,7 +428,7 @@
     
     function openWordDetails(item) {
       document.getElementById('modalWordText').textContent = item.text;
-      document.getElementById('modalTag').textContent = `الآية ${item.ayah}`;
+      document.getElementById('modalTag').textContent = item.isIstiada ? 'الاستعاذة' : `الآية ${item.ayah}`;
       
       const rulesList = document.getElementById('modalRulesList');
       rulesList.innerHTML = '';
@@ -444,36 +446,30 @@
         rulesList.innerHTML = `<div class="text-ink-muted text-sm text-center py-4">لا توجد أحكام تجويدية خاصة هنا.</div>`;
       }
 
-      // Configure play word button
       const playBtn = document.getElementById('playWordBtn');
       playBtn.onclick = () => {
         const offset = RECITERS_CONFIG[currentReciter].timingOffset || 0;
         audio.currentTime = item.start + offset;
         if(audio.paused) togglePlay();
-        closeDetails();
       };
 
-      modal.classList.remove('hidden');
-      // trigger reflow
-      void modal.offsetWidth;
-      modal.classList.add('opacity-100');
-      card.classList.remove('translate-y-full', 'md:translate-y-10');
-      card.classList.add('translate-y-0');
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        void modal.offsetWidth; // trigger reflow
+        modal.classList.add('opacity-100');
+        card.classList.remove('translate-y-4');
+        card.classList.add('translate-y-0');
+      }
     }
 
     function closeDetails() {
       modal.classList.remove('opacity-100');
       card.classList.remove('translate-y-0');
-      card.classList.add('translate-y-full', 'md:translate-y-10');
+      card.classList.add('translate-y-4');
       setTimeout(() => {
         modal.classList.add('hidden');
-      }, 300); // match transition duration
+      }, 300);
     }
-
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-      if(e.target === modal) closeDetails();
-    });
 
     // --- Audio & Synchronization ---
     function setupAudio() {
@@ -483,6 +479,12 @@
       
       reciterSelect.addEventListener('change', (e) => {
         currentReciter = e.target.value;
+        renderQuran();
+        
+        // Reapply active filter correctly
+        const activeFilterBtn = document.querySelector(`.filter-chip[data-cat="${currentFilter}"]`);
+        if (activeFilterBtn) applyFilter(currentFilter, activeFilterBtn);
+
         const wasPlaying = !audio.paused;
         audio.src = RECITERS_CONFIG[currentReciter].url;
         if(wasPlaying) audio.play();
@@ -511,7 +513,6 @@
         cancelAnimationFrame(animationFrameId);
       });
 
-      // Slider interactions
       progressSlider.addEventListener('input', () => {
         isDragging = true;
         updateSliderVisuals();
@@ -521,7 +522,7 @@
       progressSlider.addEventListener('change', () => {
         audio.currentTime = progressSlider.value;
         isDragging = false;
-        forceSync(); // immediately update highlight
+        forceSync();
       });
     }
 
@@ -542,7 +543,6 @@
       progressActive.style.width = `${val}%`;
     }
 
-    // High Performance Sync using requestAnimationFrame
     function syncLoop() {
       if (!isDragging) {
         progressSlider.value = audio.currentTime;
@@ -556,11 +556,15 @@
     function forceSync() {
       const current = audio.currentTime;
       const offset = RECITERS_CONFIG[currentReciter].timingOffset || 0;
+      // Adjusted time accounts for the offset so Bismillah remains at start: 0.1
       const adjustedTime = current - offset;
 
       const currentWord = quranData.find(item => !item.isAyahEnd && adjustedTime >= item.start && adjustedTime < item.end);
 
       if (currentWord) {
+        // Skip highlighting Isti'adha if reciter doesn't have it
+        if (currentWord.isIstiada && !RECITERS_CONFIG[currentReciter].hasIstiada) return;
+
         if (activeWordId !== currentWord.id) {
           clearHighlight();
           activeWordId = currentWord.id;
@@ -578,7 +582,6 @@
       if (activeEl) activeEl.classList.remove('speaking');
     }
 
-    // Start
     init();
 
   </script>
